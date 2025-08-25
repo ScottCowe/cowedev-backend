@@ -1,10 +1,13 @@
+use std::env;
+
 use axum::Router;
+use dotenv::dotenv;
 use sqlx::{
     PgPool,
     postgres::{PgConnectOptions, PgPoolOptions},
 };
 
-use crate::routes::posts;
+use crate::routes::{api, r#static};
 
 pub mod routes;
 pub mod types;
@@ -16,20 +19,14 @@ pub struct AppState {
 
 #[tokio::main]
 async fn main() {
-    // TODO: Do following with config files or smth
-    let is_devenv = true;
+    dotenv().ok();
 
-    let socket_location = if is_devenv {
-        "/home/cowe/repos/cowedev-backend/.tmp/"
-    } else {
-        "/var/lib/postgresql/"
-    };
+    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL envar not set");
     let database_name = "cowedev-blogposts";
 
     // TODO: Proper error handling
-    // TODO: Options file or smth
     let opts = PgConnectOptions::new()
-        .socket(socket_location)
+        .socket(database_url)
         .database(database_name);
 
     let pool = PgPoolOptions::new()
@@ -40,7 +37,10 @@ async fn main() {
 
     let state = AppState { pool };
 
-    let router = Router::new().merge(posts::router()).with_state(state);
+    let router = Router::new()
+        .merge(api::router())
+        .merge(r#static::router())
+        .with_state(state);
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
     axum::serve(listener, router.into_make_service())

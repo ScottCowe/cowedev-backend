@@ -17,10 +17,10 @@ pub async fn get_posts(State(state): State<AppState>) -> Json<Value> {
     Json(json!(posts))
 }
 
-pub async fn get_post(State(state): State<AppState>, Path(path): Path<String>) -> Json<Value> {
+pub async fn get_post(State(state): State<AppState>, Path(id): Path<String>) -> Json<Value> {
     // TODO: Make sure this is actually safe
     let post: Vec<Blogpost> = sqlx::query_as(r#"SELECT * FROM posts WHERE id=$1"#)
-        .bind(path)
+        .bind(id)
         .fetch_all(&state.pool)
         .await
         .unwrap();
