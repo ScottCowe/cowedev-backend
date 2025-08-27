@@ -10,6 +10,7 @@ pkgs.mkShell {
     clippy
     cargo-watch
     postgresql
+    sqlx-cli
   ];
 
   shellHook = ''
