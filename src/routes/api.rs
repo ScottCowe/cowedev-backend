@@ -9,6 +9,7 @@ use crate::AppState;
 use crate::types::{Blogpost, BlogpostData};
 
 pub async fn get_posts(State(state): State<AppState>) -> Json<Value> {
+    // TODO: Switch to using query_as macro
     let posts: Vec<BlogpostData> = sqlx::query_as(r#"SELECT id, title, format FROM posts"#)
         .fetch_all(&state.pool)
         .await
@@ -19,18 +20,23 @@ pub async fn get_posts(State(state): State<AppState>) -> Json<Value> {
 
 pub async fn get_post(State(state): State<AppState>, Path(id): Path<String>) -> Json<Value> {
     // TODO: Make sure this is actually safe
-    let post: Vec<Blogpost> = sqlx::query_as(r#"SELECT * FROM posts WHERE id=$1"#)
-        .bind(id)
-        .fetch_all(&state.pool)
-        .await
-        .unwrap();
+    // TODO: Switch to using query_as macro
+    let post_data: BlogpostData =
+        sqlx::query_as(r#"SELECT id, title, format FROM posts WHERE id=$1"#)
+            .bind(id)
+            .fetch_one(&state.pool)
+            .await
+            .unwrap();
 
-    if post.is_empty() {
-        // TODO: Make this properly fail and stuff
-        return Json(json!({}));
-    }
+    // TODO: Implement fetching content from static url
+    let post = Blogpost {
+        id: post_data.id,
+        title: post_data.title,
+        format: post_data.format,
+        content: "".to_string(),
+    };
 
-    Json(json!(post[0]))
+    Json(json!(post))
 }
 
 pub fn router() -> Router<AppState> {

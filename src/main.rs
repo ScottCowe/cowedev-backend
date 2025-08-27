@@ -21,12 +21,12 @@ pub struct AppState {
 async fn main() {
     dotenv().ok();
 
-    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL envar not set");
+    let socket_path = env::var("SOCKET_PATH").expect("SOCKET_PATH envar not set");
     let database_name = "cowedev-blogposts";
 
     // TODO: Proper error handling
     let opts = PgConnectOptions::new()
-        .socket(database_url)
+        .socket(socket_path)
         .database(database_name);
 
     let pool = PgPoolOptions::new()
