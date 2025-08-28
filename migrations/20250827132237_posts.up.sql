@@ -9,5 +9,4 @@ CREATE TABLE posts (
 INSERT INTO posts (id, title, format)
 VALUES 
     ('post-1', 'Post 1', 'plaintext'),
-    ('post-2', 'Post 2', 'plaintext'),
-    ('post-3', 'Post 3', 'plaintext');
+    ('post-2', 'Post 2', 'html');

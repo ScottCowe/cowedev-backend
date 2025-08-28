@@ -1,3 +1,5 @@
+use std::{env, fs};
+
 use axum::{
     Json, Router,
     extract::{Path, State},
@@ -28,12 +30,21 @@ pub async fn get_post(State(state): State<AppState>, Path(id): Path<String>) -> 
             .await
             .unwrap();
 
-    // TODO: Implement fetching content from static url
+    let data_dir = env::var("DATA_DIR").expect("DATA_DIR envar not set");
+
+    let path = match post_data.format.as_str() {
+        "plaintext" => format!("{}/{}/content.txt", data_dir, post_data.id),
+        "html" => format!("{}/{}/content.html", data_dir, post_data.id),
+        _ => "".to_string(),
+    };
+
+    let content = fs::read_to_string(path).expect("File not reading");
+
     let post = Blogpost {
         id: post_data.id,
         title: post_data.title,
         format: post_data.format,
-        content: "".to_string(),
+        content: content,
     };
 
     Json(json!(post))
