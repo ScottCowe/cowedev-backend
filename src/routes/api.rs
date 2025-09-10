@@ -12,7 +12,7 @@ use crate::types::{Blogpost, BlogpostData};
 
 pub async fn get_posts(State(state): State<AppState>) -> Json<Value> {
     // TODO: Switch to using query_as macro
-    let posts: Vec<BlogpostData> = sqlx::query_as(r#"SELECT id, title, format FROM posts"#)
+    let posts: Vec<BlogpostData> = sqlx::query_as(r#"SELECT * FROM posts"#)
         .fetch_all(&state.pool)
         .await
         .unwrap();
@@ -23,12 +23,11 @@ pub async fn get_posts(State(state): State<AppState>) -> Json<Value> {
 pub async fn get_post(State(state): State<AppState>, Path(id): Path<String>) -> Json<Value> {
     // TODO: Make sure this is actually safe
     // TODO: Switch to using query_as macro
-    let post_data: BlogpostData =
-        sqlx::query_as(r#"SELECT id, title, format FROM posts WHERE id=$1"#)
-            .bind(id)
-            .fetch_one(&state.pool)
-            .await
-            .unwrap();
+    let post_data: BlogpostData = sqlx::query_as(r#"SELECT * FROM posts WHERE id=$1"#)
+        .bind(id)
+        .fetch_one(&state.pool)
+        .await
+        .unwrap();
 
     let data_dir = env::var("DATA_DIR").expect("DATA_DIR envar not set");
 
@@ -44,6 +43,9 @@ pub async fn get_post(State(state): State<AppState>, Path(id): Path<String>) -> 
         id: post_data.id,
         title: post_data.title,
         format: post_data.format,
+        created_on: post_data.created_on,
+        updated_on: post_data.updated_on,
+        tags: post_data.tags,
         content: content,
     };
 
