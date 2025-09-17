@@ -22,7 +22,7 @@ async fn main() {
     dotenv().ok();
 
     let socket_path = env::var("SOCKET_PATH").expect("SOCKET_PATH envar not set");
-    let database_name = "cowedev-blogposts";
+    let database_name = env::var("DB_NAME").expect("DB_NAME envar not found");
 
     // TODO: Proper error handling
     let opts = PgConnectOptions::new()
