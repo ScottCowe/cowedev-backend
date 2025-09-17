@@ -25,8 +25,8 @@
             src = pkgsFor.${system}.fetchFromGitHub {
               owner = "ScottCowe";
               repo = "cowedev-backend";
-              rev = "4a12e0bb6a1861c6ee6aceb557aad2af70cb7a4d";
-              sha256 = "sha256-iLUrizRaNMvZMmzJ1dM2HbKelEtzQBNRjgPd0vXCkcM=";
+              rev = "cea25a8bddabbe19793e6c3cc2fa446101e204b3";
+              sha256 = "sha256-n2tbKIS2Y8xVPWkpK24WnjSbz0O5adVHiwr0/JA0YmQ=";
             };
           };
       });
