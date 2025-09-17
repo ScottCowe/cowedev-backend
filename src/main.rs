@@ -27,7 +27,7 @@ async fn main() {
     // TODO: Proper error handling
     let opts = PgConnectOptions::new()
         .socket(socket_path)
-        .database(database_name);
+        .database(&database_name);
 
     let pool = PgPoolOptions::new()
         .max_connections(5) // <- Seems low (in theory anyway)
