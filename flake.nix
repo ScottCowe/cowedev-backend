@@ -29,8 +29,8 @@
         release = mkRelease pkgsFor.${system} pkgsFor.${system}.fetchFromGithub {
           owner = "ScottCowe";
           repo = "cowedev-backend";
-          rev = "f282f260b342d5ff8432567af0268cf8a1e01d4e";
-          sha256 = "sha256-Ui4kDJNedA2xVT94EQTTHAnMvMrP9UjLqR9t1agtsZE=";
+          rev = "4a12e0bb6a1861c6ee6aceb557aad2af70cb7a4d";
+          sha256 = "sha256-iLUrizRaNMvZMmzJ1dM2HbKelEtzQBNRjgPd0vXCkcM=";
         };
       });
 
